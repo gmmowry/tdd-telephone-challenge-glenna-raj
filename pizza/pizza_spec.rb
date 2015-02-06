@@ -2,6 +2,54 @@ require 'rspec'
 require_relative 'pizza'
 require_relative 'topping'
 
+
+describe "Topping" do
+  let(:name) { "Chicken" }
+  let(:required_bake_time) { 600 }
+  let(:topping) { Topping.new(name, required_bake_time)}
+
+  describe "#initialize" do
+    it "should have the name 'Chicken'" do
+      expect(topping.name).to eq("Chicken")
+    end
+
+    it "should have the required_bake_time 10" do
+      expect(topping.required_bake_time).to eq(10)
+    end
+
+    it "must have a name" do
+      expect { Topping.new(required_bake_time: 100) }.to raise_error(ArgumentError)
+    end
+
+    it "must have a required bake time" do
+      expect { Topping.new(name: "Mussels") }.to raise_error(ArgumentError)
+    end
+
+    it "should have a time_baked attribute which defaults to zero" do
+      expect(topping.time_baked).to eq(0)
+    end
+  end
+
+  describe "#bake!" do
+    it "should increment the time_baked" do
+      topping.bake!(300)
+      expect(topping.time_baked).to eq(300)
+    end
+  end
+
+  describe "#baked?" do
+    it "should return false if unbaked" do
+      expect(topping.baked?).to be_falsey
+    end
+
+    it "should return true if baked" do
+      topping.bake!(topping.required_bake_time)
+      expect(topping.baked?).to be_truthy
+    end
+  end
+end
+
+
 describe "Pizza" do
 
   let(:spinach) { Topping.new(name: "Spinach",
@@ -12,50 +60,50 @@ describe "Pizza" do
 
   describe "#initialize" do
     it "should have the name 'Florentine'" do
-      expect(pizza.name).to_eq "Florentine"
+      expect(pizza.name).to eq("Florentine")
     end
 
     it "should have the description 'Spinach'" do
-      expect(pizza.description).to_eq "Spinach"
+      expect(pizza.description).to eq("Spinach")
     end
 
     it "must have a name" do
-      expect { Pizza.new }.to raise_error
+      expect { Pizza.new }.to raise_error(ArgumentError)
     end
 
     it "should have a time_baked attribute which defaults to zero" do
-      expect(pizza.time_baked).to_eq 0
+      expect(pizza.time_baked).to eq(0)
     end
 
     it "should have toppings" do
-      expect(pizza.toppings).to be_an Array
+      expect(pizza.toppings).to be_a Array
     end
 
     it "should return a topping from the array" do
-      pizza.toppings[0].to be_a Topping
+      pizza.toppings[0].to be_an_instance of Topping
     end
   end
 
   describe "#bake!" do
     it "should increment the time_baked" do
       pizza.bake!(4)
-      expect (pizza.time_baked).to_eq 4
+      expect (pizza.time_baked).to eq(4)
     end
 
     it "should increment the time_baked for each topping" do
       pizza.bake!(4)
-      pizza.toppings.all? {|topping| topping.time_baked == 4}.to be_true
+      pizza.toppings.all? {|topping| topping.time_baked == 4}.to be_truthy
     end
   end
 
   describe "#baked?" do
     it "should return false if pizza is unbaked" do
-      expect(pizza.baked?).to be_false
+      expect(pizza.baked?).to be_falsey
     end
 
     it "should return true if pizza is baked" do
       pizza.bake!(pizza.required_bake_time)
-      expect(pizza.baked?).to be_true
+      expect(pizza.baked?).to be_truthy
     end
   end
 
@@ -66,7 +114,7 @@ describe "Pizza" do
 
     it "returns finished toppings" do
       pizza.bake!(50)
-      expect(pizza.finished_toppings.length).to_eq 1
+      expect(pizza.finished_toppings.length).to eq(1)
     end
   end
 
@@ -77,55 +125,11 @@ describe "Pizza" do
     end
 
     it "returns unfinished toppings" do
-      expect(pizza.unfinished_toppings.length).to_eq 1
+      expect(pizza.unfinished_toppings.length).to eq(1)
     end
   end
 end
 
-describe "Topping" do
-  let(:topping) { Topping.new(name: "Chicken",
-    required_bake_time: 600)}
-
-  describe "#initialize" do
-    it "should have the name 'Chicken'" do
-      expect(topping.name).to_eq "Chicken"
-    end
-
-    it "should have the required_bake_time 10" do
-      expect(topping.required_bake_time).to_eq 600
-    end
-
-    it "must have a name" do
-      expect { Topping.new(required_bake_time: 100) }.to raise_error
-    end
-
-    it "must have a required bake time" do
-      expect { Topping.new(name: "Mussels") }.to raise_error
-    end
-
-    it "should have a time_baked attribute which defaults to zero" do
-      expect(topping.time_baked).to_eq 0
-    end
-  end
-
-  describe "#bake!" do
-    it "should increment the time_baked" do
-      topping.bake!(300)
-      expect(topping.time_baked).to_eq 300
-    end
-  end
-
-  describe "#baked?" do
-    it "should return false if unbaked" do
-      expect(topping.baked?).to be_false
-    end
-
-    it "should return true if baked" do
-      topping.bake!(topping.required_bake_time)
-      expect(topping.baked?).to be_true
-    end
-  end
-end
 
 # ~> LoadError
 # ~> cannot load such file -- /Users/apprentice/Desktop/raj-glenna/tdd-telephone-challenge-glenna-raj/pizza/pizza
